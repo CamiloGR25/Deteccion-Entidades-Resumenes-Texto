@@ -4,13 +4,11 @@ import spacy
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
-import gensim
-from gensim import corpora
 
 # Cargar el modelo en español
 nlp = spacy.load("es_core_news_md")
 
-def generar_resumen(texto, num_oraciones=2):
+def generar_resumen(texto, num_oraciones):
     # analizador de sumy para procesar el texto en español
     parser = PlaintextParser.from_string(texto, Tokenizer("spanish"))
     summarizer = LsaSummarizer()
@@ -42,9 +40,9 @@ def extraer_entidades():
 def resumir():
     # obtener el texto del formulario
     texto = request.form.get("texto", "")
-
+    num_sentences = int(request.form.get("num_sentences", 2))
     # generar el resumen
-    resumen = generar_resumen(texto)
+    resumen = generar_resumen(texto, num_oraciones=num_sentences)
 
     # renderizar la plantilla con el resumen
     return render_template('index.html', resumen=resumen)
